@@ -58,14 +58,14 @@ def pre_process(a=0.97):
     return decorator
 
 
-@pre_process(a=0.95)  # вызывается декоратор для даной функции
+@pre_process(a=0.95)
 def plot_signal(s):
     for sample in s:
         print(sample)
 
 
 def task15():
-    arr = [i for i in range(10)]  # генератор списка от 0 до 9
+    arr = [i for i in range(10)]
     plot_signal(arr)
 
 
