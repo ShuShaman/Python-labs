@@ -1,0 +1,124 @@
+import os
+import hashlib
+import re
+
+# Напишите скрипт, который читает текстовый файл и выводит символы
+# в порядке убывания частоты встречаемости в тексте. Регистр символа
+# не имеет значения. Программа должна учитывать только буквенные
+# символы (символы пунктуации, цифры и служебные символы слудет
+# игнорировать).
+
+
+def task_1():
+    file = open('There will come soft rains.txt', 'r')
+    text = file.read()
+    file.close()
+    symbols = '!@#№$%^&*(),.:;?/|"[]+_-'
+    vocabulary = {letter: text.count(letter) for letter in text if letter not in symbols}
+    for key in sorted(vocabulary.keys(), key=vocabulary.get, reverse=True):
+        print(key, ': ', vocabulary[key])
+
+# Напишите скрипт, позволяющий искать в заданной директории и в ее
+# подпапках файлы-дубликаты на основе сравнения контрольных сумм
+# (MD5). Файлы могут иметь одинаковое содержимое, но отличаться
+# именами. Скрипт должен вывести группы имен обнаруженных файлов дубликатов.
+
+
+def task_2():
+    path = 'C:\\Users\\user\\Desktop\\d'
+    files = os.listdir(path)
+    filecount = []
+    for file in files:
+        with open(path + '\\' + file, 'rb') as f:
+            content = f.read()
+            f.close()
+            filecount.append(hashlib.md5(content).hexdigest())
+
+    for i in range(len(files) - 1):
+        for j in range(i + 1, len(files)):
+            if filecount[i] == filecount[j]:
+                print(files[i], ' - копия файла ', files[j])
+
+
+# Задан путь к директории с музыкальными файлами (в названии
+# которых нет номеров, а только названия песен) и текстовый файл,
+# хранящий полный список песен с номерами и названиями в виде строк
+# формата «01. Freefall [6:12]». Напишите скрипт, который корректирует
+# имена файлов в директории на основе текста списка песен
+
+
+def task_3():
+    directory = 'music'
+    files = os.listdir(directory)
+
+    try:
+        with open(r'songs.txt', 'rt') as f:
+            lines = f.readlines()
+            lines = list(map(lambda x: x.rstrip(), lines))  # убрать \n на конце каждой строки
+
+        for line in lines:
+            str = ''.join(line)
+            str = str.split()
+            str = str[1] + '.mp3'
+            j = files.index(str)
+            filepath = directory + '/' + line + '.mp3'
+            os.rename(directory + '/' + files[j], filepath)
+    except IOError as err:
+        print(err)
+        lines = []
+
+
+# task_3()
+
+
+# Напишите скрипт, который позволяет ввести с клавиатуры имя
+# текстового файла, найти в нем с помощью регулярных выражений все
+# подстроки определенного вида, в соответствии с вариантом.
+# Вариант 2: найдите все значения времени – подстроки вида «23:15:59»
+
+
+def task_4():
+    pathFile = input('Введите название файла: ')
+
+    if os.path.exists(pathFile):
+        if os.path.isfile(pathFile):
+            try:
+                with open(pathFile, 'rt') as f:
+                    lines = f.readlines()
+                    lines = list(map(lambda x: x.rstrip(), lines))
+                print('Список названий файлов из текстового файла: ', lines)
+
+                kolline = 0
+                for line in lines:
+                    str = ''.join(line)
+                    result = re.findall(r'\d{2}-\d{2}-\d{4}', str)
+                    # S.find - Поиск подстроки в строке. Возвращает номер первого вхождения или -1
+                    str_data = ''.join(result)
+                    pos_data = str.find(str_data)
+                    if (pos_data != -1) & (len(str_data) != 0):
+                        print('Строка', kolline, ', позиция', pos_data, ': найдено \'', str_data, '\'')
+                    kolline = kolline + 1
+                    str = ''
+
+            except IOError as err:
+                print(err)
+                lines = []
+
+# task_4()
+
+# Введите с клавиатуры текст. Программно найдите в нем и выведите
+# отдельно все слова, которые начинаются с большого латинского
+# символа (от A до Z) и заканчиваются 2 или 4 цифрами, например
+# «Petr93», «Johnny70», «Service2002». Используйте регулярные
+# выражения.
+
+
+def task_5():
+    str = input('Введите текст: ')
+    print(str)
+    str1 = re.findall(r'[A-Z]\w+\d{2}|\d{4}', str)
+    print(str1)
+
+
+# task_5()
+
